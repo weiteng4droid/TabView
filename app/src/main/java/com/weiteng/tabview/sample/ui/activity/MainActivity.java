@@ -52,13 +52,7 @@ public class MainActivity extends AppCompatActivity implements TabView.OnTabClic
 
         initAllFragment();
 
-        mTabView.setOnTabClickListener(new TabView.OnTabClickListener() {
-
-            @Override
-            public void onTabClick(int index) {
-
-            }
-        });
+        mTabView.setOnTabClickListener(this);
     }
 
     private void initAllFragment() {

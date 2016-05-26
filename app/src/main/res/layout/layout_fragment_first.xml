@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-
-
+              android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/text_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="#8A2BE2"
-        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
         android:text="爱车"/>
 
-</LinearLayout>
+    <com.weiteng.tabview.SegmentView
+        android:id="@+id/item_table_view"
+        android:layout_below="@id/text_item"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        app:it_textSize="14sp"
+        app:it_texts="购买|服务|保险"
+        app:it_verticalGap="5dp"/>
+
+</RelativeLayout>
