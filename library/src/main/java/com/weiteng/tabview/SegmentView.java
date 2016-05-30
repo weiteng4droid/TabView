@@ -3,8 +3,12 @@ package com.weiteng.tabview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -22,7 +26,7 @@ public class SegmentView extends View {
 
     private Rect[] mCacheBounds;
     private Rect[] mTextBounds;
-
+    private Rect mSizeRect;
     private int mLineBorder;
 
     private int mSingleChildWidth;
@@ -31,8 +35,8 @@ public class SegmentView extends View {
     private int mHorizonGap;
     private int mVerticalGap;
 
-    private int mColors;
-    private int mBorderColor;
+    private int mNormalColor;
+    private int mSelectedColor;
 
     private Paint mPaint;
     private Paint mLinePaint;
@@ -77,25 +81,22 @@ public class SegmentView extends View {
         mLineBorder = ta.getDimensionPixelSize(R.styleable.SegmentView_it_lineBorder,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.5f, context.getResources().getDisplayMetrics()));
         mTextSize = ta.getDimensionPixelSize(R.styleable.SegmentView_it_textSize,
-                (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, context.getResources().getDisplayMetrics()));
-        mColors = ta.getColor(R.styleable.SegmentView_it_textColor, 0xff0099cc);
-        mBorderColor = ta.getColor(R.styleable.SegmentView_it_lineBorderColor, 0xffa0a9b0);
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, context.getResources().getDisplayMetrics()));
+        mNormalColor = ta.getColor(R.styleable.SegmentView_it_normal_color, 0xffa0a9b0);
+        mSelectedColor = ta.getColor(R.styleable.SegmentView_it_select_color, 0xff0099cc);
         ta.recycle();
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextSize(mTextSize);
-        mPaint.setColor(mColors);
 
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLinePaint.setStrokeWidth(mLineBorder);
         mLinePaint.setStyle(Paint.Style.STROKE);
-        mLinePaint.setColor(mBorderColor);
 
         // 对触摸的点进行定义，提交精度
         int touchSlop = 0;
-        if(context == null){
+        if (context == null) {
             touchSlop = ViewConfiguration.getTouchSlop();
-        }else{
+        } else {
             final ViewConfiguration config = ViewConfiguration.get(context);
             touchSlop = config.getScaledTouchSlop();
         }
@@ -122,6 +123,10 @@ public class SegmentView extends View {
         if(mTexts != null){
             requestLayout();
         }
+    }
+
+    public String[] getTexts() {
+        return mTexts;
     }
 
     public void setCurrentIndex(int index) {
@@ -215,9 +220,15 @@ public class SegmentView extends View {
             height = heightMode == MeasureSpec.UNSPECIFIED ? 0 : heightSize;
         }
 
+        createSizeRect();
         setMeasuredDimension(width, height);
     }
 
+    private void createSizeRect() {
+        Rect rectFirst = mCacheBounds[0];
+        Rect rectLast = mCacheBounds[mTexts.length - 1];
+        mSizeRect = new Rect(rectFirst.left, rectFirst.top, rectLast.right, rectLast.bottom);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -257,34 +268,29 @@ public class SegmentView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
 
-        Rect rectFirst = mCacheBounds[0];
-        Rect rectLast = mCacheBounds[mTexts.length - 1];
+        mLinePaint.setStrokeWidth(mLineBorder);
+        mLinePaint.setColor(mNormalColor);
+        canvas.drawRect(mSizeRect, mLinePaint);
 
-        canvas.drawLine(rectFirst.left, rectFirst.top, rectLast.right, rectLast.top, mLinePaint);
-        canvas.drawLine(rectFirst.left, rectFirst.bottom, rectLast.right, rectLast.bottom, mLinePaint);
-        canvas.drawLine(rectFirst.left, rectFirst.top, rectFirst.left, rectFirst.bottom, mLinePaint);
-        canvas.drawLine(rectLast.right, rectLast.top, rectLast.right, rectLast.bottom, mLinePaint);
+        for (int i = 0; i < mCacheBounds.length; i++) {
+            Rect rect = mCacheBounds[i];
+            if (rect != null) {
 
-        for (int x = 0; x < mCacheBounds.length; x++) {
-            Rect rect = mCacheBounds[x];
-            if(rect != null) {
-                /*
-                if (x != mCacheBounds.length - 1) {
-                    canvas.drawLine(rect.right, rect.top, rect.right, rect.bottom, mLinePaint);
-                }else{
-                    canvas.drawLine(rect.right, rect.top, rect.right, rect.bottom, mLinePaint);
-                }
-                */
+                mLinePaint.setStrokeWidth(mLineBorder / 2);
+                mLinePaint.setColor(mNormalColor);
                 canvas.drawRect(rect, mLinePaint);
-                if (x == mCurrentIndex) {
-                    mPaint.setColor(mColors);
-                    canvas.drawLine(rect.left, rect.bottom - 1, rect.right, rect.bottom - 1, mPaint);
-                }else{
-                    mPaint.setColor(mBorderColor);
+
+                if (i == mCurrentIndex) {
+                    mPaint.setColor(mSelectedColor);
+                    mLinePaint.setStrokeWidth(mLineBorder);
+                    mLinePaint.setColor(mSelectedColor);
+                    canvas.drawLine(rect.left, rect.bottom - 1, rect.right, rect.bottom - 1, mLinePaint);
+                } else {
+                    mPaint.setColor(mNormalColor);
                 }
-                canvas.drawText(mTexts[x], rect.left + (mSingleChildWidth - mTextBounds[x].width()) / 2, rect.top + ((mSingleChildHeight + mTextBounds[x].height()) / 2), mPaint);
+
+                canvas.drawText(mTexts[i], rect.left + (mSingleChildWidth - mTextBounds[i].width()) / 2, rect.top + ((mSingleChildHeight + mTextBounds[i].height()) / 2), mPaint);
             }
         }
     }

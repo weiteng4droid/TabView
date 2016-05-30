@@ -4,6 +4,19 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent" >
 
+    <com.weiteng.tabview.SegmentView
+        android:id="@+id/segment_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        app:it_select_color="#00a6ff"
+        app:it_normal_color="#979796"
+        app:it_textSize="14sp"
+        app:it_texts="编程|娱乐|睡觉"
+        app:it_verticalGap="5dp"/>
+
     <TextView
         android:id="@+id/text_item"
         android:layout_width="match_parent"
@@ -13,18 +26,5 @@
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:text="爱车"/>
-
-    <com.weiteng.tabview.SegmentView
-        android:id="@+id/item_table_view"
-        android:layout_below="@id/text_item"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/white"
-        app:it_textSize="14sp"
-        app:it_texts="购买|服务|保险"
-        app:it_verticalGap="5dp"/>
 
 </RelativeLayout>
