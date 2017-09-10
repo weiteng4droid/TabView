@@ -1,5 +1,6 @@
 package com.weiteng.tabview.sample.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 import com.weiteng.tabview.SegmentView;
 import com.weiteng.tabview.sample.R;
 import com.weiteng.tabview.sample.base.BaseFragment;
+import com.weiteng.tabview.sample.ui.activity.MusicActivity;
 
 
 /**
@@ -26,6 +28,12 @@ public class FirstFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         mSegmentView = (SegmentView) view.findViewById(R.id.segment_view);
+        view.findViewById(R.id.text_item).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mActivity, MusicActivity.class));
+            }
+        });
     }
 
     @Override

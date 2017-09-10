@@ -16,6 +16,8 @@ import android.view.ViewConfiguration;
 
 
 /**
+ * Tab 控制控制
+ *
  * Created by weiTeng on 15/12/5.
  */
 public class TabView extends View {
@@ -57,6 +59,9 @@ public class TabView extends View {
     private int mStartX;
     private int mStartY;
     private int mCurrentIndex;
+
+    private static final int[] STATE_CHECHED   = new int[]{android.R.attr.state_checked};
+    private static final int[] STATE_UNCHECHED = new int[]{-android.R.attr.state_checked};
 
     private OnTabClickListener mOnTabClickListener;
 
@@ -152,7 +157,6 @@ public class TabView extends View {
         if (mPointRadius != pointRadius) {
             mPointRadius = pointRadius;
             requestLayout();
-            invalidate();
         }
     }
 
@@ -160,7 +164,6 @@ public class TabView extends View {
         if(mDrawableWidth != drawableWidth){
             mDrawableWidth = drawableWidth;
             requestLayout();
-            invalidate();
         }
     }
 
@@ -432,10 +435,10 @@ public class TabView extends View {
         for(int i = 0; i < mTexts.length; i++) {
             drawable = mStateListDrawables[i];
             if (i == mCurrentIndex) {
-                drawable.setState(new int[]{android.R.attr.state_checked});
+                drawable.setState(STATE_CHECHED);
                 mPaint.setColor(mSelectColor);
             } else {
-                drawable.setState(new int[]{-android.R.attr.state_checked});
+                drawable.setState(STATE_UNCHECHED);
                 mPaint.setColor(mBorderColor);
             }
             drawable.draw(canvas);

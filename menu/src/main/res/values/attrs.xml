@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MenuTabView">
+        <attr name="mt_texts" format="string" />
+        <!-- 间隙 -->
+        <attr name="mt_verticalGap" format="dimension|reference" />
+        <!-- 文字大小 -->
+        <attr name="mt_textSize" format="dimension|reference" />
+        <!-- 选中时的文字颜色 -->
+        <attr name="mt_textSelectColor" format="color|reference" />
+        <!-- 未选中时的文字颜色 -->
+        <attr name="mt_textNormalColor" format="color|reference" />
+        <!-- 未选中时的背景颜色 -->
+        <attr name="mt_bgNormalColor" format="color|reference" />
+        <!-- 选中时的背景颜色 -->
+        <attr name="mt_bgSelectColor" format="color|reference" />
+        <attr name="mt_showNotice" format="boolean" />
+        <!-- 选中时的左边背景线的宽度 -->
+        <attr name="mt_leftLineWith" format="dimension|reference" />
+        <!-- 选中时的左边背景线的颜色 -->
+        <attr name="mt_leftLineColor" format="color|reference" />
+    </declare-styleable>
+
+</resources>

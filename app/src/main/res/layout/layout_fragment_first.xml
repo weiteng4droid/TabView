@@ -27,4 +27,6 @@
         android:gravity="center_horizontal"
         android:text="爱车"/>
 
+
+
 </RelativeLayout>
