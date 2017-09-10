@@ -16,6 +16,7 @@
         <!-- 选中时的背景颜色 -->
         <attr name="mt_bgSelectColor" format="color|reference" />
         <attr name="mt_showNotice" format="boolean" />
+        <attr name="mt_noticePointRadius" format="dimension|reference" />
         <!-- 选中时的左边背景线的宽度 -->
         <attr name="mt_leftLineWith" format="dimension|reference" />
         <!-- 选中时的左边背景线的颜色 -->

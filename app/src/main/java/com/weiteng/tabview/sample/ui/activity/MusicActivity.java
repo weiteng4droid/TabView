@@ -23,5 +23,7 @@ public class MusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_music);
 
         mMenuTabView = (MenuTabView) findViewById(R.id.tabview);
+        mMenuTabView.showNoticePoint(true);
+        mMenuTabView.showNoticePointAtPosition(2, true);
     }
 }

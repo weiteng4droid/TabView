@@ -12,8 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import java.util.Arrays;
-
 
 /**
  * Tab 控制控制
@@ -30,7 +28,7 @@ public class MenuTabView extends View {
 
     private String[] mTexts;
 
-    // Gap between image and text
+    /** 定义的左边缘右边缘的最小空隙 */
     private int mVerticalGap;
     private int mTextSize;
     private int mSingleWidth;
@@ -38,7 +36,6 @@ public class MenuTabView extends View {
     private int mLeftLineWidth;
     private int mLeftLineColor;
     private int mTextSelectColor, mTextNormalColor;
-    private int mNoticeColor = 0xffff0000;
     private int mSelectBgColor, mNormalBgColor;
 
     private int mPointRadius = 10;
@@ -91,6 +88,8 @@ public class MenuTabView extends View {
         mTextNormalColor = ta.getColor(R.styleable.MenuTabView_mt_textNormalColor, 0x59f0f0f0);
         mSelectBgColor = ta.getColor(R.styleable.MenuTabView_mt_bgSelectColor, getResources().getColor(android.R.color.darker_gray));
         mNormalBgColor = ta.getColor(R.styleable.MenuTabView_mt_bgNormalColor, getResources().getColor(android.R.color.white));
+        mPointRadius = ta.getDimensionPixelSize(R.styleable.MenuTabView_mt_noticePointRadius,
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, context.getResources().getDisplayMetrics()));
 
         mShowNotice = ta.getBoolean(R.styleable.MenuTabView_mt_showNotice, false);
 
@@ -109,9 +108,9 @@ public class MenuTabView extends View {
         mSelectBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSelectBackgroundPaint.setStyle(Paint.Style.FILL);
 
-        if(mShowNotice){
+        if (mShowNotice) {
             mNoticePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mNoticePaint.setColor(mNoticeColor);
+            mNoticePaint.setColor(0xffff0000);
             mPosNotices = new boolean[mTexts.length];
         }
 
@@ -167,12 +166,13 @@ public class MenuTabView extends View {
     }
 
     public void showNoticePointAtPosition(int position, boolean toggle){
-        if(!mShowNotice){
+        if (!mShowNotice) {
             return;
         }
-        if(position >= mTexts.length){
+        if (position >= mTexts.length) {
             throw new IndexOutOfBoundsException("超出标签的长度");
         }
+
         mPosNotices[position] = toggle;
         invalidate();
     }
@@ -240,7 +240,6 @@ public class MenuTabView extends View {
         if (mCacheBounds == null || mCacheBounds.length != mTexts.length) {
             mCacheBounds = new Rect[mTexts.length];
         }
-
         if (mTextBounds == null || mTextBounds.length != mTexts.length) {
             mTextBounds = new Rect[mTexts.length];
         }
@@ -313,8 +312,6 @@ public class MenuTabView extends View {
             }
             mPaint.getTextBounds(mTexts[i], 0, mTexts[i].length(), mTextBounds[i]);
         }
-
-        Log.d(TAG, "mCacheBounds = " + Arrays.toString(mCacheBounds));
     }
 
     @Override
@@ -387,6 +384,13 @@ public class MenuTabView extends View {
 
             // 绘制文本
             canvas.drawText(mTexts[i], mCacheBounds[i].exactCenterX(), mCacheBounds[i].exactCenterY() + mTextBounds[i].height() / 2, mPaint);
+
+            if (mShowNotice && mPosNotices[i]) {
+                canvas.drawCircle(
+                        mCacheBounds[i].exactCenterX() + mTextBounds[i].width() / 2 + mPointRadius,
+                        mCacheBounds[i].exactCenterY() - mTextBounds[i].height() / 2 - mPointRadius,
+                        mPointRadius, mNoticePaint);
+            }
         }
     }
 }
